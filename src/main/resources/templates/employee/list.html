@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Tutorial of Develop</title>
+<link rel="stylesheet" th:href="@{/css/employee/list.css}">
+</head>
+<body>
+    <h1>Employee情報管理システム</h1>
+    <h2>Employee一覧(全件)</h2>
+    <form name="frm" method="post" th:action="@{/employee/list}">
+        <a th:href="@{/employee/register}">新規従業員の登録</a>
+        <!-- <input type="submit"name="deleteRun" id="deleteRun" value="(選択)したUserを一括削除">*/ -->
+
+        <table>
+            <tr>
+                <th>社員番号</th>
+                <th>氏名</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="employee : ${employeelist}">
+                <td class="center"><input type="checkbox" name="idck"
+                    th:value="${employee.id}"></td>
+                <td th:text="${employee.authentication.code}"></td>
+                <td th:text="${employee.name}"></td>
+                <td><a th:href="@{/employee/detail/{aid}(aid=${employee.id})}">詳細を見る</a></td>
+            </tr>
+        </table>
+    </form>
+    <p th:text="'（全 ' + ${#lists.size(employeelist)} + ' 件）'"></p>
+    <script th:src="@{/js/employee/list.js}"></script>
+</body>
+</html>
