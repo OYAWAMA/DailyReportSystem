@@ -43,13 +43,17 @@ public class EmployeeController {
     /** User登録処理 */
     @PostMapping("/register")
     public String postRegister(Employee employee) {
+        // createdAtに日時を
+        employee.setCreatedAt(LocalDateTime.now());
+        employee.setUpdatedAt(LocalDateTime.now());
+
+        employee.getAuthentication().setEmployee(employee);
         // employee登録
         service.saveEmployee(employee);
         // 一覧画面にリダイレクト
         return "redirect:/employee/list";
     }
 
-    /** User更新画面を表示 */
     @GetMapping("/update/{id}")
     public String getEmployee(@PathVariable("id") Integer id, Model model) {
         // Modelに登録
@@ -57,10 +61,11 @@ public class EmployeeController {
         // User更新画面に遷移
         return "employee/update";
     }
+
     /** User更新処理 */
     @PostMapping("/update/{id}/")
     public String postUser(@PathVariable("id") Integer id, Model model, Employee employee) {
-        Employee emp=service.getEmployee(id);
+        Employee emp = service.getEmployee(id);
         emp.setName(employee.getName());
         emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
         emp.getAuthentication().setRole(employee.getAuthentication().getRole());
@@ -73,15 +78,18 @@ public class EmployeeController {
 
     // ----- 追加:ここから -----
     /** User削除処理 */
-    @PostMapping(path="/delate/{id}") //postmappingがポイント"
-    public String deleteRun(@PathVariable(name="id") Integer id, Model model) {
-        // Userを一括削除
-        service.deleteUser(id);
+    @PostMapping(path = "/delate/{id}") // postmappingがポイント"
+    public String delUser(@PathVariable("id") Integer id, Model model, Employee employee) {
+        Employee delemp = service.getEmployee(id);
+        // Userを論理削除
+        delemp.setDeleteFlag(1);
+        delemp.setUpdatedAt(LocalDateTime.now());
+        service.saveEmployee(delemp);
         // 一覧画面にリダイレクト
         return "redirect:/employee/list";
     }
 
-    /**詳細表示*/
+    /** 詳細表示 */
     @GetMapping("/detail/{id}")
     public String getDetail(@PathVariable("id") Integer id, Model model) {
 

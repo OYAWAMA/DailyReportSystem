@@ -8,6 +8,11 @@
 <body>
     <h1>Employee情報管理システム</h1>
     <h2>Employee一覧(全件)</h2>
+    <form method="post" th:action="@{/logout}">
+        <input type="submit" value="ログアウト">
+    </form>
+    <br>
+
     <form name="frm" method="post" th:action="@{/employee/list}">
         <a th:href="@{/employee/register}">新規従業員の登録</a>
         <!-- <input type="submit"name="deleteRun" id="deleteRun" value="(選択)したUserを一括削除">*/ -->

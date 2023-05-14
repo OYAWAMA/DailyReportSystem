@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name="authentication")
 public class Authentication{
 
-    /** 管理権限用の列挙型 */
+    /*管理権限用の列挙型 */
     public static enum Role {
         管理者, 一般
     }

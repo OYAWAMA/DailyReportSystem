@@ -17,9 +17,9 @@
         <input type="text" th:field="*{name}">
         <br>
         <label for="role">権限</label>
-        <select th:field="*{authentication.roll}">
+        <select th:field="*{authentication.role}">
             <option value="" th:text="選択してください">
-            <option th:each="item:${T(com.techacademy.entity.authentication.roll).values()}" th:value="${item}" th:text="${item}">
+            <option th:each="item:${T(com.techacademy.entity.Authentication.Role).values()}" th:value="${item}" th:text="${item}">
         </select>
 
         <label for="password">パスワード</label>
