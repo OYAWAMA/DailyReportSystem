@@ -1,10 +1,12 @@
 package com.techacademy.controller;
 
 import java.time.LocalDateTime;
+
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.techacademy.entity.Employee;
 import com.techacademy.service.EmployeeService;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("employee")
 public class EmployeeController {
@@ -22,6 +26,7 @@ public class EmployeeController {
 
     public EmployeeController(EmployeeService service) {
         this.service = service;
+
     }
 
     /** 一覧画面を表示 */
@@ -42,14 +47,24 @@ public class EmployeeController {
 
     /** User登録処理 */
     @PostMapping("/register")
-    public String postRegister(Employee employee) {
-        // createdAtに日時を
-        employee.setCreatedAt(LocalDateTime.now());
-        employee.setUpdatedAt(LocalDateTime.now());
 
-        employee.getAuthentication().setEmployee(employee);
-        // employee登録
-        service.saveEmployee(employee);
+    public String postRegister(@Valid Employee employee, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "入力が不適切です");
+            return "employee/register";
+        }
+        // createdAtに日時を
+        try {
+            employee.setCreatedAt(LocalDateTime.now());
+            employee.setUpdatedAt(LocalDateTime.now());
+            employee.getAuthentication().setEmployee(employee);
+            // employee登録
+            service.saveEmployee(employee);
+        } catch (Exception e) {
+            // TODO 自動生成された catch ブロック
+            model.addAttribute("errorMessage", "登録できませんでした: " + e.getMessage());
+            return "employee/register";
+        }
         // 一覧画面にリダイレクト
         return "redirect:/employee/list";
     }
@@ -64,27 +79,46 @@ public class EmployeeController {
 
     /** User更新処理 */
     @PostMapping("/update/{id}/")
-    public String postUser(@PathVariable("id") Integer id, Model model, Employee employee) {
-        Employee emp = service.getEmployee(id);
-        emp.setName(employee.getName());
-        emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
-        emp.getAuthentication().setRole(employee.getAuthentication().getRole());
-        emp.setUpdatedAt(LocalDateTime.now());
-        // User登録
-        service.saveEmployee(emp);
+    public String postUser(@PathVariable("id") Integer id, Model model, @Valid Employee employee,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "入力が不適切です");
+            return "employee/update";
+        }
+        try {
+            Employee emp = service.getEmployee(id);
+            emp.setName(employee.getName());
+            emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
+            emp.getAuthentication().setRole(employee.getAuthentication().getRole());
+            emp.setUpdatedAt(LocalDateTime.now());
+            // User登録
+
+            service.saveEmployee(emp);
+        } catch (Exception e) {
+            // TODO 自動生成された catch ブロック
+            model.addAttribute("errorMessage", "更新できませんでした: " + e.getMessage());
+            return "employee/update";
+        }
         // 一覧画面にリダイレクト
         return "redirect:/employee/list";
     }
 
     // ----- 追加:ここから -----
     /** User削除処理 */
-    @PostMapping(path = "/delate/{id}") // postmappingがポイント"
+    @PostMapping(path = "/delete/{id}") // postmappingがポイント"
     public String delUser(@PathVariable("id") Integer id, Model model, Employee employee) {
-        Employee delemp = service.getEmployee(id);
-        // Userを論理削除
-        delemp.setDeleteFlag(1);
-        delemp.setUpdatedAt(LocalDateTime.now());
-        service.saveEmployee(delemp);
+        try {
+            Employee delemp = service.getEmployee(id);
+            // Userを論理削除
+            delemp.setDeleteFlag(1);
+            delemp.setUpdatedAt(LocalDateTime.now());
+
+            service.saveEmployee(delemp);
+        } catch (Exception e) {
+            // TODO 自動生成された catch ブロック
+            model.addAttribute("errorMessage", "ユーザーを削除できませんでした: " + e.getMessage());
+            return "employee/list";
+        }
         // 一覧画面にリダイレクト
         return "redirect:/employee/list";
     }

@@ -11,19 +11,19 @@
     <form method="post" th:action="@{/employee/register}" th:object="${employee}">
 
         <label for="code">社員番号</label>
-        <input type="text" th:field="*{authentication.code}">
+        <input type="text" th:field="*{authentication.code}" required>
         <br>
         <label for="name">氏名</label>
-        <input type="text" th:field="*{name}">
+        <input type="text" th:field="*{name}" required>
         <br>
         <label for="role">権限</label>
-        <select th:field="*{authentication.role}">
+        <select th:field="*{authentication.role}" required>
             <option value="" th:text="選択してください">
             <option th:each="item:${T(com.techacademy.entity.Authentication.Role).values()}" th:value="${item}" th:text="${item}">
         </select>
 
         <label for="password">パスワード</label>
-        <input type="password" th:field="*{authentication.password}">
+        <input type="password" th:field="*{authentication.password}" required>
         <br>
         <br>
         <input type="submit" value="投稿">

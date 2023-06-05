@@ -10,12 +10,14 @@ import com.techacademy.entity.Authentication;
 import com.techacademy.entity.Employee;
 import com.techacademy.repository.EmployeeRepository;
 
+
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public EmployeeService(EmployeeRepository repository) {
         this.employeeRepository = repository;
+
     }
 
     /** 全件を検索して返す */
@@ -30,7 +32,13 @@ public class EmployeeService {
 
     /** Userの登録を行なう */
     @Transactional
-    public Employee saveEmployee(Employee employee) {
+    public Employee saveEmployee(Employee employee) throws Exception{
+        String code = employee.getAuthentication().getCode();
+        boolean exists = employeeRepository.existsByAuthenticationCode(code);
+
+        if (exists) {
+            throw new Exception("社員番号 '" + code + "' は既に存在します。");
+        }
         return employeeRepository.save(employee);
     }
 

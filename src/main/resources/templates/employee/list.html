@@ -19,13 +19,13 @@
 
         <table>
             <tr>
+                <th></th>
                 <th>社員番号</th>
                 <th>氏名</th>
                 <th>操作</th>
             </tr>
             <tr th:each="employee : ${employeelist}">
-                <td class="center"><input type="checkbox" name="idck"
-                    th:value="${employee.id}"></td>
+                <td th:value="${employee.id}"></td>
                 <td th:text="${employee.authentication.code}"></td>
                 <td th:text="${employee.name}"></td>
                 <td><a th:href="@{/employee/detail/{aid}(aid=${employee.id})}">詳細を見る</a></td>
