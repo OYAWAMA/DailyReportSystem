@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import java.util.Set;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -24,9 +25,11 @@ import javax.validation.Valid;
 @RequestMapping("employee")
 public class EmployeeController {
     private final EmployeeService service;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmployeeController(EmployeeService service) {
+    public EmployeeController(EmployeeService service, PasswordEncoder passwordEncoder) {
         this.service = service;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
@@ -58,6 +61,8 @@ public class EmployeeController {
         try {
             employee.setCreatedAt(LocalDateTime.now());
             employee.setUpdatedAt(LocalDateTime.now());
+            //パスワードの暗号化
+            employee.getAuthentication().setPassword(passwordEncoder.encode(employee.getAuthentication().getPassword()));
             employee.getAuthentication().setEmployee(employee);
             // employee登録
             service.saveEmployee(employee);
@@ -92,11 +97,11 @@ public class EmployeeController {
             emp.setName(employee.getName());
          // パスワードがない場合に、パスワードをnullで上書きしないように
             if (employee.getAuthentication().getPassword() != null && !employee.getAuthentication().getPassword().isEmpty()) {
-                emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
+                //パスワードを暗号化
+                emp.getAuthentication().setPassword(passwordEncoder.encode(employee.getAuthentication().getPassword()));
             }
             emp.getAuthentication().setRole(employee.getAuthentication().getRole());
             emp.setUpdatedAt(LocalDateTime.now());
-            // User登録
             service.saveEmployee(emp);
         } catch (Exception e) {
             // TODO 自動生成された catch ブロック
