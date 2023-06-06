@@ -88,12 +88,15 @@ public class EmployeeController {
         }
         try {
             Employee emp = service.getEmployee(id);
+
             emp.setName(employee.getName());
-            emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
+         // パスワードがない場合に、パスワードをnullで上書きしないように
+            if (employee.getAuthentication().getPassword() != null && !employee.getAuthentication().getPassword().isEmpty()) {
+                emp.getAuthentication().setPassword(employee.getAuthentication().getPassword());
+            }
             emp.getAuthentication().setRole(employee.getAuthentication().getRole());
             emp.setUpdatedAt(LocalDateTime.now());
             // User登録
-
             service.saveEmployee(emp);
         } catch (Exception e) {
             // TODO 自動生成された catch ブロック
@@ -114,7 +117,6 @@ public class EmployeeController {
             // Userを論理削除
             delemp.setDeleteFlag(1);
             delemp.setUpdatedAt(LocalDateTime.now());
-
             service.saveEmployee(delemp);
         } catch (Exception e) {
             // TODO 自動生成された catch ブロック
