@@ -6,30 +6,30 @@
 <link rel="stylesheet" th:href="@{/css/employee/update.css}">
 </head>
 <body>
-	<h1>employee情報管理システム</h1>
-	<h2>employee登録</h2>
-	<form method="post"
-		th:action="@{/employee/update/{id}/(id=${employee.id})}"
-		th:object="${employee}">
-		<label for="id">ID</label> <input type="hidden" id="id" name="id"
-			th:value="*{id}" th:text="*{id}"> <label for="code">社員番号</label>
-		<label th:text="*{authentication.code}"></label> <br> <label
-			for="name">氏名</label> <input type="text" th:field="*{name}"
-			value={aid}(aid=${employee.name}> <br> <label for="role">権限</label>
-		<select th:field="*{authentication.role}">
-			<option value="" th:text="選択してください">
-			<option
-				th:each="item:${T(com.techacademy.entity.Authentication.Role).values()}"
-				th:value="${item}" th:text="${item}"
-				th:selected="*{authentication.role} == ${item}">
-		</select> <label for="password">パスワード</label> <input type="password"
-			th:field="*{authentication.password}"> <br> <br> <input
-			type="submit" value="投稿"> <a th:href="@{/employee/list}">一覧に戻る</a>
-	</form>
-	<form name="frm" method="post"
-		th:action="@{/employee/delate/{id}/(id=${employee.id})}">
-		<input type="submit" name="deleteRun" id="deleteRun"
-			value="この従業員情報を削除する">
-	</form>
+    <h1>employee情報管理システム</h1>
+    <h2>従業員情報　編集ページ</h2>
+    <form method="post"
+        th:action="@{/employee/update/{id}/(id=${employee.id})}"
+        th:object="${employee}">
+        <label for="id">ID</label> <input type="hidden" id="id" name="id"
+            th:value="*{id}" th:text="*{id}"> <label for="code">社員番号</label>
+        <label th:text="*{authentication.code}"></label> <br> <label
+            for="name">氏名</label> <input type="text" th:field="*{name}"
+            value={aid}(aid=${employee.name}> <br> <label for="role">権限</label>
+        <select th:field="*{authentication.role}">
+            <option value="" th:text="選択してください">
+            <option
+                th:each="item:${T(com.techacademy.entity.Authentication.Role).values()}"
+                th:value="${item}" th:text="${item}"
+                th:selected="*{authentication.role} == ${item}">
+        </select> <label for="password">パスワード</label> <input type="password"
+            th:field="*{authentication.password}"> <br> <br> <input
+            type="submit" value="投稿"> <a th:href="@{/employee/list}">一覧に戻る</a>
+    </form>
+    <form name="frm" method="post"
+        th:action="@{/employee/delete/{id}/(id=${employee.id})}">
+        <input type="submit" name="deleteRun" id="deleteRun"
+            value="この従業員情報を削除する">
+    </form>
 </body>
 </html>

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,6 +107,7 @@ public class EmployeeController {
     // ----- 追加:ここから -----
     /** User削除処理 */
     @PostMapping(path = "/delete/{id}") // postmappingがポイント"
+    @Transactional
     public String delUser(@PathVariable("id") Integer id, Model model, Employee employee) {
         try {
             Employee delemp = service.getEmployee(id);
